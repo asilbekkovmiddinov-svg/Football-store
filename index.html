@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Football_EASPORTS Store</title>
-    <!-- Telegram Web App Script -->
     <script src="https://telegram.org"></script>
     <style>
         * {
@@ -19,7 +18,6 @@
             color: #2c3e50;
             padding: 16px;
         }
-        /* Levelpay uslubidagi yuqori profil qismi */
         .profile-card {
             background: white;
             border-radius: 20px;
@@ -50,7 +48,6 @@
             font-size: 14px;
             cursor: pointer;
         }
-        /* Sarlavha */
         .section-title {
             font-size: 18px;
             font-weight: 700;
@@ -59,10 +56,9 @@
             align-items: center;
             gap: 8px;
         }
-        /* Mahsulotlar ro'yxati */
         .items-grid {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 12px;
         }
         .coin-item {
@@ -74,11 +70,6 @@
             align-items: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             border: 1px solid #edf2f7;
-            transition: transform 0.1s;
-        }
-        .coin-item:active {
-            transform: scale(0.98);
-            background-color: #fcfcfc;
         }
         .coin-detail {
             display: flex;
@@ -107,80 +98,67 @@
             border-radius: 10px;
             font-weight: 700;
             font-size: 14px;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- Yuqori qism: Balans va To'ldirish -->
     <div class="profile-card">
         <div class="balance-info">
             <p>Umumiy balans</p>
-            <div class="balance-amount" id="user-balance">0 UZS</div>
+            <div class="balance-amount">0 UZS</div>
         </div>
         <button class="deposit-btn" onclick="depositMoney()">To'ldirish ></button>
     </div>
 
-    <!-- O'yin bo'limi -->
     <div class="section-title">⚽️ eFootball (PES) Coins</div>
 
-    <!-- Narxlar Ro'yxati -->
-    <div class="items-grid" id="items-container">
-        <!-- Narxlar JS orqali avtomat joylashadi -->
+    <div class="items-grid">
+        <div class="coin-item">
+            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">260 coins</div></div>
+            <button class="coin-price" onclick="buyItem('260 coins', '40.000 so\'m')">40.000 so'm</button>
+        </div>
+        <div class="coin-item">
+            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">300 coins</div></div>
+            <button class="coin-price" onclick="buyItem('300 coins', '45.000 so\'m')">45.000 so'm</button>
+        </div>
+        <div class="coin-item">
+            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">390 coins</div></div>
+            <button class="coin-price" onclick="buyItem('390 coins', '60.000 so\'m')">60.000 so'm</button>
+        </div>
+        <div class="coin-item">
+            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">550 coins</div></div>
+            <button class="coin-price" onclick="buyItem('550 coins', '70.000 so\'m')">70.000 so'm</button>
+        </div>
+        <div class="coin-item">
+            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">750 coins</div></div>
+            <button class="coin-price" onclick="buyItem('750 coins', '95.000 so\'m')">95.000 so'm</button>
+        </div>
+        <div class="coin-item">
+            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">1040 coins</div></div>
+            <button class="coin-price" onclick="buyItem('1040 coins', '125.000 so\'m')">125.000 so'm</button>
+        </div>
+        <div class="coin-item">
+            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">1790 coins</div></div>
+            <button class="coin-price" onclick="buyItem('1790 coins', '210.000 so\'m')">210.000 so'm</button>
+        </div>
     </div>
 
     <script>
-        // Telegram Web Appni faollashtirish
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Oynani to'liq ochish
+        tg.expand();
 
-        // Siz yuborgan rasmdagi narxlar bazasi
-        const pesPrices = [
-            { coins: "260 coins", price: "40.000 so'm" },
-            { coins: "300 coins", price: "45.000 so'm" },
-            { coins: "390 coins", price: "60.000 so'm" },
-            { coins: "550 coins", price: "70.000 so'm" },
-            { coins: "750 coins", price: "95.000 so'm" },
-            { coins: "1040 coins", price: "125.000 so'm" },
-            { coins: "1790 coins", price: "210.000 so'm" },
-            { coins: "2130 coins", price: "240.000 so'm" },
-            { coins: "2680 coins", price: "310.000 so'm" },
-            { coins: "3250 coins", price: "350.000 so'm" },
-            { coins: "4000 coins", price: "440.000 so'm" },
-            { coins: "5700 coins", price: "560.000 so'm" },
-            { coins: "7040 coins", price: "730.000 so'm" },
-            { coins: "9990 coins", price: "1.050.000 so'm" },
-            { coins: "12.800 coins", price: "1.190.000 so'm" }
-        ];
-
-        // Elementlarni ekranga chiqarish
-        const container = document.getElementById('items-container');
-        pesPrices.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'coin-item';
-            div.onclick = () => buyItem(item.coins, item.price);
-            div.innerHTML = `
-                <div class="coin-detail">
-                    <div class="coin-icon">🪙</div>
-                    <div class="coin-count">${item.coins}</div>
-                </div>
-                <div class="coin-price">${item.price}</div>
-            `;
-            container.appendChild(div);
-        });
-
-        // Satib olish bosilganda ishlaydigan funksiya
         function buyItem(name, price) {
             tg.showConfirm(`Siz haqiqatdan ham ${name} paketini ${price}ga sotib olmoqchimisiz?`, (confirmed) => {
                 if (confirmed) {
-                    // Bot mantiqiga ma'lumot jo'natish
                     tg.sendData(JSON.stringify({action: "buy", item: name, price: price}));
                     tg.close();
                 }
             });
         }
 
-        // To'ldirish bosilganda
         function depositMoney() {
             tg.sendData(JSON.stringify({action: "deposit"}));
             tg.close();
