@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Football_EASPORTS Store</title>
+    <!-- Telegram Web App Script -->
+    <script src="https://telegram.org"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-user-select: none;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #2c3e50;
+            padding: 16px;
+        }
+        /* Levelpay uslubidagi yuqori profil qismi */
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .balance-info p {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 4px;
+        }
+        .balance-amount {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e272e;
+        }
+        .deposit-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        /* Sarlavha */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* Mahsulotlar ro'yxati */
+        .items-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .coin-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border: 1px solid #edf2f7;
+            transition: transform 0.1s;
+        }
+        .coin-item:active {
+            transform: scale(0.98);
+            background-color: #fcfcfc;
+        }
+        .coin-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .coin-icon {
+            font-size: 22px;
+            background: #fff3d6;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .coin-count {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        .coin-price {
+            background: #f0f4f8;
+            color: #2b6cb0;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Yuqori qism: Balans va To'ldirish -->
+    <div class="profile-card">
+        <div class="balance-info">
+            <p>Umumiy balans</p>
+            <div class="balance-amount" id="user-balance">0 UZS</div>
+        </div>
+        <button class="deposit-btn" onclick="depositMoney()">To'ldirish ></button>
+    </div>
+
+    <!-- O'yin bo'limi -->
+    <div class="section-title">⚽️ eFootball (PES) Coins</div>
+
+    <!-- Narxlar Ro'yxati -->
+    <div class="items-grid" id="items-container">
+        <!-- Narxlar JS orqali avtomat joylashadi -->
+    </div>
+
+    <script>
+        // Telegram Web Appni faollashtirish
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Oynani to'liq ochish
+
+        // Siz yuborgan rasmdagi narxlar bazasi
+        const pesPrices = [
+            { coins: "260 coins", price: "40.000 so'm" },
+            { coins: "300 coins", price: "45.000 so'm" },
+            { coins: "390 coins", price: "60.000 so'm" },
+            { coins: "550 coins", price: "70.000 so'm" },
+            { coins: "750 coins", price: "95.000 so'm" },
+            { coins: "1040 coins", price: "125.000 so'm" },
+            { coins: "1790 coins", price: "210.000 so'm" },
+            { coins: "2130 coins", price: "240.000 so'm" },
+            { coins: "2680 coins", price: "310.000 so'm" },
+            { coins: "3250 coins", price: "350.000 so'm" },
+            { coins: "4000 coins", price: "440.000 so'm" },
+            { coins: "5700 coins", price: "560.000 so'm" },
+            { coins: "7040 coins", price: "730.000 so'm" },
+            { coins: "9990 coins", price: "1.050.000 so'm" },
+            { coins: "12.800 coins", price: "1.190.000 so'm" }
+        ];
+
+        // Elementlarni ekranga chiqarish
+        const container = document.getElementById('items-container');
+        pesPrices.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'coin-item';
+            div.onclick = () => buyItem(item.coins, item.price);
+            div.innerHTML = `
+                <div class="coin-detail">
+                    <div class="coin-icon">🪙</div>
+                    <div class="coin-count">${item.coins}</div>
+                </div>
+                <div class="coin-price">${item.price}</div>
+            `;
+            container.appendChild(div);
+        });
+
+        // Satib olish bosilganda ishlaydigan funksiya
+        function buyItem(name, price) {
+            tg.showConfirm(`Siz haqiqatdan ham ${name} paketini ${price}ga sotib olmoqchimisiz?`, (confirmed) => {
+                if (confirmed) {
+                    // Bot mantiqiga ma'lumot jo'natish
+                    tg.sendData(JSON.stringify({action: "buy", item: name, price: price}));
+                    tg.close();
+                }
+            });
+        }
+
+        // To'ldirish bosilganda
+        function depositMoney() {
+            tg.sendData(JSON.stringify({action: "deposit"}));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
