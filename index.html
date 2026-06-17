@@ -3,165 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Football_EASPORTS Store</title>
+    <title>Football Store</title>
     <script src="https://telegram.org"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-user-select: none;
-        }
-        body {
-            background-color: #f4f6f9;
-            color: #2c3e50;
-            padding: 16px;
-        }
-        .profile-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .balance-info p {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-bottom: 4px;
-        }
-        .balance-amount {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1e272e;
-        }
-        .deposit-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .items-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .coin-item {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            border: 1px solid #edf2f7;
-        }
-        .coin-detail {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .coin-icon {
-            font-size: 22px;
-            background: #fff3d6;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        .coin-count {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2d3748;
-        }
-        .coin-price {
-            background: #f0f4f8;
-            color: #2b6cb0;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-user-select: none; }
+        body { background-color: #f4f6f9; color: #2c3e50; padding: 16px; }
+        .profile-card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .balance-amount { font-size: 24px; font-weight: 800; color: #1e272e; }
+        .deposit-btn { background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        .items-grid { display: flex; flex-direction: column; gap: 12px; }
+        .coin-item { background: white; border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #edf2f7; }
+        .coin-count { font-size: 16px; font-weight: 700; color: #2d3748; }
+        .coin-price { background: #f0f4f8; color: #2b6cb0; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="profile-card">
-        <div class="balance-info">
-            <p>Umumiy balans</p>
+        <div>
+            <p style="font-size: 14px; color: #7f8c8d;">Umumiy balans</p>
             <div class="balance-amount">0 UZS</div>
         </div>
-        <button class="deposit-btn" onclick="depositMoney()">To'ldirish ></button>
+        <button class="deposit-btn" onclick="sendData('deposit', 'Balans', '0')">To'ldirish ></button>
     </div>
 
     <div class="section-title">⚽️ eFootball (PES) Coins</div>
 
     <div class="items-grid">
         <div class="coin-item">
-            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">260 coins</div></div>
-            <button class="coin-price" onclick="buyItem('260 coins', '40.000 so\'m')">40.000 so'm</button>
+            <span class="coin-count">🪙 260 coins</span>
+            <button class="coin-price" onclick="sendData('buy', '260 coins', '40.000 so\'m')">40.000 so'm</button>
         </div>
         <div class="coin-item">
-            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">300 coins</div></div>
-            <button class="coin-price" onclick="buyItem('300 coins', '45.000 so\'m')">45.000 so'm</button>
+            <span class="coin-count">🪙 300 coins</span>
+            <button class="coin-price" onclick="sendData('buy', '300 coins', '45.000 so\'m')">45.000 so'm</button>
         </div>
         <div class="coin-item">
-            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">390 coins</div></div>
-            <button class="coin-price" onclick="buyItem('390 coins', '60.000 so\'m')">60.000 so'm</button>
+            <span class="coin-count">🪙 390 coins</span>
+            <button class="coin-price" onclick="sendData('buy', '390 coins', '60.000 so\'m')">60.000 so'm</button>
         </div>
         <div class="coin-item">
-            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">550 coins</div></div>
-            <button class="coin-price" onclick="buyItem('550 coins', '70.000 so\'m')">70.000 so'm</button>
+            <span class="coin-count">🪙 550 coins</span>
+            <button class="coin-price" onclick="sendData('buy', '550 coins', '70.000 so\'m')">70.000 so'm</button>
         </div>
         <div class="coin-item">
-            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">750 coins</div></div>
-            <button class="coin-price" onclick="buyItem('750 coins', '95.000 so\'m')">95.000 so'm</button>
-        </div>
-        <div class="coin-item">
-            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">1040 coins</div></div>
-            <button class="coin-price" onclick="buyItem('1040 coins', '125.000 so\'m')">125.000 so'm</button>
-        </div>
-        <div class="coin-item">
-            <div class="coin-detail"><div class="coin-icon">🪙</div><div class="coin-count">1790 coins</div></div>
-            <button class="coin-price" onclick="buyItem('1790 coins', '210.000 so\'m')">210.000 so'm</button>
+            <span class="coin-count">🪙 750 coins</span>
+            <button class="coin-price" onclick="sendData('buy', '750 coins', '95.000 so\'m')">95.000 so'm</button>
         </div>
     </div>
 
     <script>
+        // Telegram Web App bilan bog'lanish
         const tg = window.Telegram.WebApp;
+        tg.ready();
         tg.expand();
 
-        function buyItem(name, price) {
-            tg.showConfirm(`Siz haqiqatdan ham ${name} paketini ${price}ga sotib olmoqchimisiz?`, (confirmed) => {
-                if (confirmed) {
-                    tg.sendData(JSON.stringify({action: "buy", item: name, price: price}));
-                    tg.close();
-                }
-            });
-        }
-
-        function depositMoney() {
-            tg.sendData(JSON.stringify({action: "deposit"}));
-            tg.close();
+        function sendData(action, item, price) {
+            // Botga ma'lumotni matn ko'rinishida yuborish
+            const messageObj = { "action": action, "item": item, "price": price };
+            tg.sendData(JSON.stringify(messageObj));
+            tg.close(); // Do'kon oynasini yopish
         }
     </script>
 </body>
